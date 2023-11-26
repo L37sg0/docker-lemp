@@ -5,6 +5,7 @@ WORKDIR /var/www
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
+    git \
     bash \
     gzip \
     lsof \
@@ -49,6 +50,9 @@ RUN apt-get update && apt-get install -y nodejs
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Install Symfony CLI
+RUN curl -sS https://get.symfony.com/cli/installer | bash
 
 # Add user for the application
 RUN groupadd -g 1000 www

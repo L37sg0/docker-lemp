@@ -1,2 +1,7 @@
 .idea
 .env
+/laravel-wms
+/echub
+/symfony-rbac
+/laravel-ticket
+/symfony-guestbook

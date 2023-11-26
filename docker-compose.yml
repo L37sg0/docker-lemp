@@ -1,6 +1,15 @@
 version: '3'
 
 services:
+  # Mail Service
+  mailer:
+    image: schickling/mailcatcher
+    container_name: ${PROJECT_NAME}_mailer
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "1080:1080"
+
   # PHP Service
   app:
     build:
@@ -46,7 +55,8 @@ services:
         source: db
         target: /var/lib/mysql
       - ./mysql/my.cnf:/etc/mysql/my.cnf
-
+    ports:
+      - "3306:3306"
 # DOCKER Volumes
 volumes:
   db:
