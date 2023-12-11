@@ -22,7 +22,9 @@ RUN apt-get update && apt-get install -y \
     libxslt1-dev \
     libwebp-dev \
     libxpm-dev \
-    libfreetype6-dev
+    libfreetype6-dev \
+    librabbitmq-dev \
+    librabbitmq4
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -42,7 +44,10 @@ RUN docker-php-ext-configure gd \
     soap \
     sockets \
     xsl \
-    zip
+    zip \
+    # Install AMQP extension
+    && pecl install amqp && \
+        docker-php-ext-enable amqp
 
 # Enable NodeSource repository and install nodejs
 RUN curl -sL https://deb.nodesource.com/setup_20.x | bash -E -
