@@ -2,6 +2,42 @@ version: '3'
 
 services:
 
+  # Elasticsearch Service
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
+    container_name: ${PROJECT_NAME}_es01
+    labels:
+      co.elastic.logs/module: elasticsearch
+    volumes:
+#      - certs:/usr/share/elasticsearch/config/certs
+      - type: volume
+        source: es01
+        target: /usr/share/elasticsearch/data
+#    ports:
+#      - ${ES_PORT}:9200
+    environment:
+      - node.name=es01
+      - cluster.name=docker-cluster
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=password
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+#      - xpack.security.http.ssl.key=certs/es01/es01.key
+#      - xpack.security.http.ssl.certificate=certs/es01/es01.crt
+#      - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
+      - xpack.security.transport.ssl.enabled=false
+#      - xpack.security.transport.ssl.key=certs/es01/es01.key
+#      - xpack.security.transport.ssl.certificate=certs/es01/es01.crt
+#      - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
+#      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.license.self_generated.type=basic
+    mem_limit: 1073741824
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
   # RabbitMQ Service
   rabbitmq:
     image: rabbitmq:3-management
@@ -44,6 +80,24 @@ services:
       - ./:/var/www
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
 
+
+  # PHP 8.1 Service
+  php81:
+    build:
+      context: .
+      dockerfile: php81
+    image: ${PROJECT_NAME}/php81
+    container_name: ${PROJECT_NAME}_php81
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: php81
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+
   # NGINX Service
   web:
     image: nginx:alpine
@@ -77,4 +131,6 @@ services:
 # DOCKER Volumes
 volumes:
   db:
+    driver: local
+  es01:
     driver: local
