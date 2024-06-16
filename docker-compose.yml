@@ -32,6 +32,7 @@ services:
 #      - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
 #      - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=basic
+      - indices.id_field_data.enabled=true
     mem_limit: 1073741824
     ulimits:
       memlock:
