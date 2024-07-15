@@ -99,6 +99,24 @@ services:
       - ./:/var/www
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
 
+  # PHP 7.2 Service
+  php72:
+    build:
+      context: .
+      dockerfile: php72
+    image: ${PROJECT_NAME}/php72
+    container_name: ${PROJECT_NAME}_php72
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: php72
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+
+
   # NGINX Service
   web:
     image: nginx:alpine
@@ -129,9 +147,32 @@ services:
       - ./mysql/my.cnf:/etc/mysql/my.cnf
     ports:
       - "3306:3306"
+
+  # MYSQL 5.7 Service
+  db5:
+    image: mysql:5.7
+    container_name: ${PROJECT_NAME}_db5
+    restart: unless-stopped
+    tty: true
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - type: volume
+        source: db5
+        target: /var/lib/mysql
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+    ports:
+      - "33061:3306"
+
+
 # DOCKER Volumes
 volumes:
   db:
+    driver: local
+  db5:
     driver: local
   es01:
     driver: local
