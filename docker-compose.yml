@@ -3,35 +3,27 @@ version: '3'
 services:
 
   # Elasticsearch Service
-  es01:
+  elastic8:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
-    container_name: ${PROJECT_NAME}_es01
+    container_name: ${PROJECT_NAME}_elastic8
     tty: true
     labels:
       co.elastic.logs/module: elasticsearch
     volumes:
-#      - certs:/usr/share/elasticsearch/config/certs
       - type: volume
-        source: es01
+        source: elastic8
         target: /usr/share/elasticsearch/data
     ports:
       - "9200:9200"
     environment:
-      - node.name=es01
+      - node.name=elastic8
       - cluster.name=docker-cluster
       - discovery.type=single-node
       - ELASTIC_PASSWORD=password
       - bootstrap.memory_lock=true
       - xpack.security.enabled=false
       - xpack.security.http.ssl.enabled=false
-#      - xpack.security.http.ssl.key=certs/es01/es01.key
-#      - xpack.security.http.ssl.certificate=certs/es01/es01.crt
-#      - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
       - xpack.security.transport.ssl.enabled=false
-#      - xpack.security.transport.ssl.key=certs/es01/es01.key
-#      - xpack.security.transport.ssl.certificate=certs/es01/es01.crt
-#      - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
-#      - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=basic
       - indices.id_field_data.enabled=true
       - http.cors.enabled=true 
@@ -67,21 +59,21 @@ services:
     ports:
       - "1080:1080"
 
-  # PHP Service
-  app:
+  # PHP 8.2 Service
+  php82:
     build:
       context: .
-      dockerfile: Dockerfile
-    image: ${PROJECT_NAME}/php
-    container_name: ${PROJECT_NAME}_app
+      dockerfile: ./php/8.2/Dockerfile
+    image: ${PROJECT_NAME}/php82
+    container_name: ${PROJECT_NAME}_php82
     restart: unless-stopped
     tty: true
     environment:
-      SERVICE_NAME: app
+      SERVICE_NAME: php82
       SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
-      - ./:/var/www
+      - ./www:/var/www
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
 
 
@@ -89,7 +81,7 @@ services:
   php81:
     build:
       context: .
-      dockerfile: php81
+      dockerfile: ./php/8.1/Dockerfile
     image: ${PROJECT_NAME}/php81
     container_name: ${PROJECT_NAME}_php81
     restart: unless-stopped
@@ -99,14 +91,14 @@ services:
       SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
-      - ./:/var/www
+      - ./www:/var/www
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
 
   # PHP 7.2 Service
   php72:
     build:
       context: .
-      dockerfile: php72
+      dockerfile: ./php/7.2/Dockerfile
     image: ${PROJECT_NAME}/php72
     container_name: ${PROJECT_NAME}_php72
     restart: unless-stopped
@@ -116,7 +108,7 @@ services:
       SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
-      - ./:/var/www
+      - ./www:/var/www
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
 
 
@@ -127,44 +119,54 @@ services:
     restart: unless-stopped
     tty: true
     volumes:
-      - ./:/var/www
+      - ./www:/var/www
       - ./nginx/conf.d/:/etc/nginx/conf.d/
     ports:
       - "80:80"
 
-  # MYSQL Service
-  db:
+  # Composer service
+  composer:
+    image: composer:latest
+    container_name: ${PROJECT_NAME}_composer
+    volumes:
+      - ./www:/var/www
+    working_dir: /var/www
+    user: "1000:1000"
+    command: ["composer"]
+
+  # MYSQL 8.0 Service
+  mysql8:
     image: mysql:8.0
-    container_name: ${PROJECT_NAME}_db
+    container_name: ${PROJECT_NAME}_mysql8
     restart: unless-stopped
     tty: true
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_USER: ${DB_USERNAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
       - type: volume
-        source: db
+        source: mysql8
         target: /var/lib/mysql
       - ./mysql/my.cnf:/etc/mysql/my.cnf
     ports:
       - "3306:3306"
 
   # MYSQL 5.7 Service
-  db5:
+  mysql5:
     image: mysql:5.7
-    container_name: ${PROJECT_NAME}_db5
+    container_name: ${PROJECT_NAME}__mysql5
     restart: unless-stopped
     tty: true
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_USER: ${DB_USERNAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
       - type: volume
-        source: db5
+        source: mysql5
         target: /var/lib/mysql
       - ./mysql/my.cnf:/etc/mysql/my.cnf
     ports:
@@ -173,9 +175,9 @@ services:
 
 # DOCKER Volumes
 volumes:
-  db:
+  mysql8:
     driver: local
-  db5:
+  mysql5:
     driver: local
-  es01:
+  elastic8:
     driver: local

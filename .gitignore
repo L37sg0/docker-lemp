@@ -1,9 +1,4 @@
 .idea
+.vscode/
 .env
-/laravel-wms
-/echub
-/symfony-rbac
-/laravel-ticket
-/symfony-guestbook
-/Yummy*
-/mehana-lian
+./www/*
