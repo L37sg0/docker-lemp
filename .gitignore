@@ -1,4 +1,4 @@
 .idea
 .vscode/
 .env
-./www/*
+www/*
