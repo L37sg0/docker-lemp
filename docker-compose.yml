@@ -61,13 +61,11 @@ services:
 
   # PHP 8.2 Service
   php82:
-    build:
-      context: .
-      dockerfile: ./php/8.2/Dockerfile
-    image: ${PROJECT_NAME}/php82
+    image: petar1v/php82:latest
     container_name: ${PROJECT_NAME}_php82
     restart: unless-stopped
     tty: true
+    user: "1000:1000"
     environment:
       SERVICE_NAME: php82
       SERVICE_TAGS: dev
@@ -79,13 +77,11 @@ services:
 
   # PHP 8.1 Service
   php81:
-    build:
-      context: .
-      dockerfile: ./php/8.1/Dockerfile
-    image: ${PROJECT_NAME}/php81
+    image: petar1v/php81:latest
     container_name: ${PROJECT_NAME}_php81
     restart: unless-stopped
     tty: true
+    user: "1000:1000"
     environment:
       SERVICE_NAME: php81
       SERVICE_TAGS: dev
@@ -96,13 +92,12 @@ services:
 
   # PHP 7.2 Service
   php72:
-    build:
-      context: .
-      dockerfile: ./php/7.2/Dockerfile
-    image: ${PROJECT_NAME}/php72
+    image: petar1v/php72:latest
     container_name: ${PROJECT_NAME}_php72
     restart: unless-stopped
     tty: true
+    user: "1000:1000"
+    command: ["php-fpm"]
     environment:
       SERVICE_NAME: php72
       SERVICE_TAGS: dev
