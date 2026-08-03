@@ -44,7 +44,9 @@ Ensure you have the following installed on your machine:
 
 Since Composer runs inside an isolated container, use the following Docker command directly in your terminal to install dependencies for a specific project (e.g., located in `www/L37sg0`):
 
-**`docker run --rm -v $(pwd)/www:/var/www -w /var/www/L37sg0 composer:latest install`**
+```bash
+docker run --rm -v $(pwd)/www:/var/www -w /var/www/L37sg0 composer:latest install
+```
 
 ---
 
