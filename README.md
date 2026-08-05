@@ -8,8 +8,9 @@ This project provides a local Docker environment designed for developing and tes
 
 * **`docker-compose.yml`** — Main configuration file for all containers and networks.
 * **`Makefile`** — Shortcut commands for managing the stack.
-* **`www/`** — Working directory containing individual web projects and applications.
+* **`www/`** — This is where you should place your projects.
 * **`nginx/conf.d/`** — Configuration files for the Nginx web server.
+* **`nginx/conf.d/nginx.conf.example`** - Example configuration file you should place in the root of your project.
 * **`mysql/`** — Configuration files for the databases.
 * **`php/`** — Custom `local.ini` settings for PHP.
 
