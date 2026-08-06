@@ -1,6 +1,6 @@
 # Local PHP Multi-Version & Service Development Environment
 
-This project provides a local Docker environment designed for developing and testing PHP applications (supporting PHP 7.2, 8.1, and 8.2), combined with essential service containers (MySQL 5.7, MySQL 8.0, Elasticsearch 8, Redis, RabbitMQ, and MailCatcher).
+This project provides a local Docker environment designed for developing and testing PHP applications (supporting PHP 7.2, 8.1, and 8.2), combined with essential service containers (MySQL 5.7, MySQL 8.0, Elasticsearch 8, Redis, RabbitMQ, Uptime-Kuma and MailCatcher).
 
 ---
 
@@ -13,6 +13,12 @@ This project provides a local Docker environment designed for developing and tes
 * **`nginx/conf.d/nginx.conf.example`** - Example configuration file you should place in the root of your project.
 * **`mysql/`** — Configuration files for the databases.
 * **`php/`** — Custom `local.ini` settings for PHP.
+
+---
+
+## Ready published services:
+   * [http://uptime.localhost](http://uptime.localhost) - Uptime-Kuma
+   * [http://mailer.localhost](http://mailer.localhost) - MailCatcher
 
 ---
 
